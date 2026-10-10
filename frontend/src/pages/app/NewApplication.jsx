@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 import PageContainer from "@/components/layout/PageContainer"
 import PageHeader from "@/components/layout/PageHeader"
+import FormField from "@/components/common/FormField"
 
 import { Button } from "@/components/ui/button"
 import { createApplication } from "@/services/applicationService"
@@ -58,54 +59,44 @@ function NewApplication() {
                         </div>
 
                         <div className="grid gap-6 sm:grid-cols-2">
-                            <div className="space-y-2">
-                                <label htmlFor="company" className="text-sm font-medium text-foreground">Company<span className="ml-1 text-destructive">*</span></label>
+                            <FormField id="company" label="Company" required>
                                 <input id="company" name="company" type="text" value={formData.company} onChange={handleChange} placeholder="e.g. Google" required
                                     className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
-                            </div>
+                            </FormField>
 
-                            <div className="space-y-2">
-                                <label htmlFor="jobTitle" className="text-sm font-medium text-foreground">Job Title<span className="ml-1 text-destructive">*</span></label>
+                            <FormField id="jobTitle" label="Job Title" required>
                                 <input id="jobTitle" name="jobTitle" type="text" value={formData.jobTitle} onChange={handleChange} placeholder="e.g. Software Engineer" required
                                     className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
-                            </div>
+                            </FormField>
                         </div>
 
-                        <div className="space-y-2">
-                            <label htmlFor="jobUrl" className="text-sm font-medium text-foreground">Job URL</label>
+                        <FormField id='jobUrl' label='Job URL'>
                             <input id="jobUrl" name="jobUrl" type="url" value={formData.jobUrl} onChange={handleChange} placeholder="https://example.com/job"
-                                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20"
-                            />
-                        </div>
+                                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
+                        </FormField>
 
                         <div className="grid gap-6 sm:grid-cols-2">
-                            <div className="space-y-2">
-                                <label htmlFor="location" className="text-sm font-medium text-foreground">Location</label>
+                            <FormField id='location' label='Location'>
                                 <input id="location" name="location" type="text" value={formData.location} onChange={handleChange} placeholder="e.g. Delhi"
-                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20"
-                                />
-                            </div>
+                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
+                            </FormField>
 
-                            <div className="space-y-2">
-                                <label htmlFor="employmentType" className="text-sm font-medium text-foreground">Employment Type</label>
+                            <FormField id="employmentType" label="Employment Type">
                                 <select id="employmentType" name="employmentType" value={formData.employmentType} onChange={handleChange}
-                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
-                                >
+                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
                                     <option value="Full-time">Full-time</option>
                                     <option value="Part-time">Part-time</option>
                                     <option value="Contract">Contract</option>
                                     <option value="Internship">Internship</option>
                                     <option value="Freelance">Freelance</option>
                                 </select>
-                            </div>
+                            </FormField>
                         </div>
 
                         <div className="grid gap-6 sm:grid-cols-2">
-                            <div className="space-y-2">
-                                <label htmlFor="status" className="text-sm font-medium text-foreground">Status</label>
+                            <FormField id='status' label='Status'>
                                 <select id="status" name="status" value={formData.status} onChange={handleChange}
-                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
-                                >
+                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
                                     <option value="Wishlist">Wishlist</option>
                                     <option value="Applied">Applied</option>
                                     <option value="Screening">Screening</option>
@@ -114,13 +105,12 @@ function NewApplication() {
                                     <option value="Rejected">Rejected</option>
                                     <option value="Withdrawn">Withdrawn</option>
                                 </select>
-                            </div>
-                            <div className="space-y-2">
-                                <label htmlFor="appliedDate" className="text-sm font-medium text-foreground">Applied Date</label>
+                            </FormField>
+
+                            <FormField id='appliedDate' label='Applied Date'>
                                 <input id="appliedDate" name="appliedDate" type="date" value={formData.appliedDate} onChange={handleChange}
-                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
-                                />
-                            </div>
+                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20" />
+                            </FormField>
                         </div>
 
                         {error && (<div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3">
