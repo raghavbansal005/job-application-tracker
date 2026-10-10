@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
+import FormField from "@/components/common/FormField"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/AuthContext.jsx"
 
@@ -56,17 +57,15 @@ function Login() {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6 rounded-xl border border-border/60 bg-card p-6 shadow-sm">
-                    <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium">Email</label>
+                    <FormField id="email" label="Email" required>
                         <input id="email" name="email" type="email" value={formState.email} onChange={handleChange} placeholder="you@example.com" required
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
-                    </div>
+                    </FormField>
 
-                    <div className="space-y-2">
-                        <label htmlFor="password" className="text-sm font-medium">Password</label>
+                    <FormField id="password" label="Password" required>
                         <input id="password" name="password" type="password" value={formState.password} onChange={handleChange} placeholder="Enter your password" required
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
-                    </div>
+                    </FormField>
 
                     <Button type="submit" className="w-full" disabled={loading}>{loading ? "Signing in..." : "Sign In"}</Button>
                 </form>

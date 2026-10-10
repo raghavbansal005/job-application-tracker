@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
+import FormField from "@/components/common/FormField";
 
 import { Button } from "@/components/ui/button";
 import { getApplicationById, updateApplication } from "@/services/applicationService";
@@ -101,32 +102,29 @@ function EditApplication() {
 
                 <form onSubmit={handleSubmit} className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
                     <div className="grid gap-6 sm:grid-cols-2">
-                        <div className="space-y-2">
-                            <label htmlFor="company" className="text-sm font-medium text-foreground">Company</label>
+                        <FormField id="company" label="Company" required>
                             <input id="company" name="company" type="text" value={formData.company} onChange={handleChange} required
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                        </div>
+                        </FormField>
 
-                        <div className="space-y-2">
-                            <label htmlFor="jobTitle" className="text-sm font-medium text-foreground">Job Title</label>
+                        <FormField id="jobTitle" label="Job Title" required>
                             <input id="jobTitle" name="jobTitle" type="text" value={formData.jobTitle} onChange={handleChange} required
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                        </div>
+                        </FormField>
 
-                        <div className="space-y-2 sm:col-span-2">
-                            <label htmlFor="jobUrl" className="text-sm font-medium text-foreground">Job URL</label>
+                        <div className="sm:col-span-2">
+                            <FormField id="jobUrl" label="Job URL">
                             <input id="jobUrl" name="jobUrl" type="url" value={formData.jobUrl} onChange={handleChange} placeholder="https://example.com/job"
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                            </FormField>
                         </div>
 
-                        <div className="space-y-2">
-                            <label htmlFor="location" className="text-sm font-medium text-foreground">Location</label>
+                        <FormField id="location" label="Location">
                             <input id="location" name="location" type="text" value={formData.location} onChange={handleChange} placeholder="Delhi, Remote, Hyderabad..."
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                        </div>
+                        </FormField>
 
-                        <div className="space-y-2">
-                            <label htmlFor="employmentType" className="text-sm font-medium text-foreground">Employment Type</label>
+                        <FormField id="employmentType" label="Employment Type">
                             <select id="employmentType" name="employmentType" value={formData.employmentType} onChange={handleChange}
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" >
                                 <option value="Full-time">Full-time</option>
@@ -135,10 +133,9 @@ function EditApplication() {
                                 <option value="Internship">Internship</option>
                                 <option value="Freelance">Freelance</option>
                             </select>
-                        </div>
+                        </FormField>
 
-                        <div className="space-y-2">
-                            <label htmlFor="status" className="text-sm font-medium text-foreground">Status</label>
+                        <FormField id="status" label="Status">
                             <select id="status" name="status" value={formData.status} onChange={handleChange}
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" >
                                 <option value="Wishlist">Wishlist</option>
@@ -149,13 +146,12 @@ function EditApplication() {
                                 <option value="Rejected">Rejected</option>
                                 <option value="Withdrawn">Withdrawn</option>
                             </select>
-                        </div>
+                        </FormField>
 
-                        <div className="space-y-2">
-                            <label htmlFor="appliedDate" className="text-sm font-medium text-foreground">Applied Date</label>
+                        <FormField id="appliedDate" label="Applied Date">
                             <input id="appliedDate" name="appliedDate" type="date" value={formData.appliedDate} onChange={handleChange}
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                        </div>
+                        </FormField>
                     </div>
 
                     {error && (<p className="mt-6 text-sm text-destructive">{error}</p>)}

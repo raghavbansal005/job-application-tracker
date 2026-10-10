@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 
 import PageContainer from "@/components/layout/PageContainer"
 import PageHeader from "@/components/layout/PageHeader"
+import FormField from "@/components/common/FormField"
 
 import { Button } from "@/components/ui/button"
 import { getInterviewById, updateInterview } from "@/services/interviewService"
@@ -89,45 +90,39 @@ function EditInterview() {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6 rounded-xl border border-border/60 bg-card p-6 shadow-sm">
-                    <div className="space-y-2">
-                        <label htmlFor="type" className="text-sm font-medium text-foreground">Interview Type</label>
+                    <FormField id="type" label="Interview Type" required>
                         <select id="type" name="type" value={formState.type} onChange={handleChange} required
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring" >
                             <option value="Online">Online</option>
                             <option value="On-site">On-Site</option>
                             <option value="Phone">Phone</option>
                         </select>
-                    </div>
+                    </FormField>
 
-                    <div className="space-y-2">
-                        <label htmlFor="round" className="text-sm font-medium text-foreground" >Interview Round</label>
+                    <FormField id="round" label="Interview Round" required>
                         <input id="round" name="round" type="text" value={formState.round} onChange={handleChange} placeholder="e.g. Technical Round 1" required
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring" />
-                    </div>
+                    </FormField>
 
-                    <div className="space-y-2">
-                        <label htmlFor="scheduledAt" className="text-sm font-medium text-foreground">Scheduled At</label>
+                    <FormField id="scheduledAt" label="Scheduled At">
                         <input id="scheduledAt" name="scheduledAt" type="datetime-local" value={formState.scheduledAt} onChange={handleChange}
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring" />
-                    </div>
+                    </FormField>
 
-                    <div className="space-y-2">
-                        <label htmlFor="interviewer" className="text-sm font-medium text-foreground">Interviewer</label>
+                    <FormField id="interviewer" label="Interviewer">
                         <input id="interviewer" name="interviewer" type="text" value={formState.interviewer} onChange={handleChange} placeholder="e.g. John Smith"
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring" />
-                    </div>
+                    </FormField>
 
-                    <div className="space-y-2">
-                        <label htmlFor="meetingLink" className="text-sm font-medium text-foreground">Meeting Link</label>
+                    <FormField id="meetingLink" label="Meeting Link">
                         <input id="meetingLink" name="meetingLink" type="url" value={formState.meetingLink} onChange={handleChange} placeholder="https://meet.google.com/..."
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring" />
-                    </div>
+                    </FormField>
 
-                    <div className="space-y-2">
-                        <label htmlFor="notes" className="text-sm font-medium text-foreground">Notes</label>
+                    <FormField id="notes" label="Notes">
                         <textarea id="notes" name="notes" value={formState.notes} onChange={handleChange} placeholder="Add any notes about this interview..." rows={5}
                             className="flex w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring" />
-                    </div>
+                    </FormField>
 
                     <div className="flex justify-end gap-3">
                         <Button type="button" variant="outline" onClick={() => navigate(`/interviews/${id}`)}>Cancel</Button>
