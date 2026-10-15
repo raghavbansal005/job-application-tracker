@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
+import StatusBadge from "@/components/common/StatusBadge"
 
 import { Button } from "@/components/ui/button";
 import {
@@ -124,7 +125,7 @@ function ApplicationDetails() {
                             <h2 className="text-lg font-semibold text-foreground">Application Overview</h2>
                             <p className="mt-1 text-sm text-muted-foreground">Details about this job application</p>
                         </div>
-                        <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">{application.status}</span>
+                        <StatusBadge status={application.status} />
                     </div>
 
                     <div className="mt-6 grid gap-6 border-t border-border/60 pt-6 sm:grid-cols-2">

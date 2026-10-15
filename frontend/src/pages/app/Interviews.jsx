@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Calendar, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { getInterviews } from "@/services/interviewService";
 
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
+import StatusBadge from "@/components/common/StatusBadge";
 
 function Interviews() {
     const navigate = useNavigate()
@@ -72,13 +73,13 @@ function Interviews() {
                 ) : (
                     <div className="grid gap-4">
                         {interviews.map((interview) => (
-                            <div key={interview._id} onClick={() => navigate(`/interviews/${interview._id}`)} className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
+                            <div key={interview._id} className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
                                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                     <div>
-                                        <h2 className="font-semibold text-foreground">{interview.round}</h2>
+                                        <h2 className="font-semibold text-foreground"><Link to={`/interviews/${interview._id}`} className="hover:text-primary hover:underline">{interview.round}</Link></h2>
                                         <p className="mt-1 text-sm text-muted-foreground">{interview.type}</p>
                                     </div>
-                                    <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">{interview.status}</span>
+                                    <StatusBadge status={interview.status} />
                                 </div>
                                 <div className="mt-6 grid gap-4 border-t border-border/60 pt-6 sm:grid-cols-3">
                                     <div>
@@ -88,10 +89,6 @@ function Interviews() {
                                     <div>
                                         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Scheduled At</p>
                                         <p className="mt-1 text-sm font-medium text-foreground">{interview.scheduledAt ? new Date(interview.scheduledAt).toLocaleString() : "Not scheduled"}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Interview Type</p>
-                                        <p className="mt-1 text-sm font-medium text-foreground">{interview.type}</p>
                                     </div>
                                 </div>
                             </div>

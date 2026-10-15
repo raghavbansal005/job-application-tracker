@@ -5,6 +5,7 @@ import { getApplication } from "@/services/applicationService";
 
 import PageHeader from "@/components/layout/PageHeader";
 import PageContainer from "@/components/layout/PageContainer";
+import StatusBadge from "@/components/common/StatusBadge";
 
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -39,8 +40,8 @@ function Applications() {
     }, [])
 
     const filteredApplication = useMemo(() => {
+        const search = searchTerm.toLowerCase().trim()
         return applications.filter((application) => {
-            const search = searchTerm.toLowerCase().trim()
             const matchesSearch = application.company?.toLowerCase().includes(search) || application.jobTitle?.toLowerCase().includes(search)
             const matchesStatus = statusFilter === 'All' || application.status === statusFilter
 
@@ -129,7 +130,7 @@ function Applications() {
                                             </div>
                                         </div>
 
-                                        <span className="w-fit shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">{application.status}</span>
+                                        <StatusBadge status={application.status} />
                                     </div>
                                     <div className="mt-5 grid gap-4 border-t border-border/60 pt-4 text-sm sm:grid-cols-3">
                                         <div>
@@ -146,9 +147,6 @@ function Applications() {
                                         </div>
                                     </div>
                                     <div className="mt-5 flex items-center justify-between border-t border-border/60 pt-4">
-                                        <div className="text-sm text-muted-foreground">
-                                            {application.appliedDate ? `Applied on ${new Date(application.appliedDate).toLocaleDateString()}` : 'Application Date not specified'}
-                                        </div>
                                         <Button variant="ghost" size="sm" onClick={() => navigate(`/applications/${application._id}`)}>
                                             View Details<ArrowRight className="ml-2 h-4 w-4" />
                                         </Button>
