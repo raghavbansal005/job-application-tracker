@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CalendarDays, ExternalLink, UserRound } from 'lucide-react'
 
+import StatusBadge from "@/components/common/StatusBadge"
+
 function UpcomingInterviews({ interviews }) {
     if (interviews.length === 0) {
         return (
@@ -36,12 +38,12 @@ function UpcomingInterviews({ interviews }) {
                                     <h3 className='font-semibold text-foreground'>{interview.round}</h3>
                                     <p className='mt-1 text-sm text-muted-foreground'>{interview.application?.company}{' · '}{interview.application?.jobTitle}</p>
                                 </div>
-                                <span className='shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary'>{interview.status}</span>
+                                <StatusBadge status={interview.status} />
                             </div>
                             <div className='mt-4 grid gap-3 text-sm sm:grid-cols-2'>
                                 <div className='flex items-center gap-2 text-muted-foreground'>
                                     <CalendarDays className='h-4 w-4' />
-                                    <span>{new Date(interview.scheduledAt).toLocaleString()}</span>
+                                    <span>{interview.scheduledAt ? new Date(interview.scheduledAt).toLocaleString() : 'Not Scheduled'}</span>
                                 </div>
                                 <div className='flex items-center gap-2 text-muted-foreground'>
                                     <UserRound className='h-4 w-4' />
@@ -49,11 +51,9 @@ function UpcomingInterviews({ interviews }) {
                                 </div>
                             </div>
                             <div className='mt-4 flex items-center justify-between border-t border-border/60 pt-4'>
-                                <span className='text-sm text-muted-foreground'>
-                                    {interview.type} Interview
-                                </span>
+                                <span className='text-sm text-muted-foreground'>{interview.type} Interview</span>
                                 {interview.meetingLink && (
-                                    <a href={interview.meetingLink} target="_blank" rel="noreferrer" className='inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline'>
+                                    <a href={interview.meetingLink} target="_blank" rel="noopener noreferrer" className='inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline'>
                                         Join Meeting
                                         <ExternalLink className='h-3.5 w-3.5' />
                                     </a>
