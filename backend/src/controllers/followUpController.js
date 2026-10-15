@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const FollowUp = require('../models/Followup')
 const Application = require('../models/Application')
 const Interview = require('../models/Interview')
@@ -46,7 +47,7 @@ const getFollowUpById = async (req, res) => {
     const { id } = req.params
 
     try {
-        const followUp = await FollowUp.findOne({ _id: id, user: req.user })
+        const followUp = await FollowUp.findOne({ _id: id, user: req.user }).populate('application', 'company jobTitle').populate('interview', 'round type')
         if (followUp) {
             return res.status(200).json({ followUp })
         }
@@ -59,17 +60,55 @@ const getFollowUpById = async (req, res) => {
 
 const updateFollowUp = async (req, res) => {
     const { id } = req.params
-    const updateData = req.body
+    const allowedFields = ['application', 'interview', 'type', 'status', 'dueDate', 'notes']
 
     try {
-        const followUp = await FollowUp.findOneAndUpdate({ _id: id, user: req.user }, updateData, { new: true })
-        if (followUp) {
-            return res.status(200).json({ followUp })
+        if (!mongoose.isValidObjectId(id)) return res.status(400).json({ message: 'Invalid follow-up ID.' })
+
+        const followUp = await FollowUp.findOne({ _id: id, user: req.user })
+        if (!followUp) return res.status(404).json({ message: 'Follow-up not found.' })
+
+        const updateData = {}
+        for (const field of allowedFields) {
+            if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+                updateData[field] = req.body[field]
+            }
         }
-        return res.status(404).json({ message: 'Follow-Up details not found.' })
+
+        if (Object.keys(updateData).length === 0) return res.status(400).json({ message: 'Please provide at least one field to update.' })
+
+        const applicationId = updateData.application ?? followUp.application
+        if (!applicationId || !mongoose.isValidObjectId(applicationId)) return res.status(400).json({ message: 'Please provide a valid application.' })
+
+        const existingApplication = await Application.findOne({ _id: applicationId, user: req.user })
+        if (!existingApplication) return res.status(404).json({ message: 'Application not found.' })
+
+        if (Object.prototype.hasOwnProperty.call(updateData, 'interview') && updateData.interview !== null && updateData.interview !== '') {
+            if (!mongoose.isValidObjectId(updateData.interview)) return res.status(400).json({ message: 'Please provide a valid interview.' })
+
+            const existingInterview = await Interview.findOne({ _id: updateData.interview, user: req.user, application: applicationId })
+            if (!existingInterview) return res.status(404).json({ message: 'Interview not found for this application.' })
+        }
+
+        for (const [field, value] of Object.entries(updateData)) {
+            if (field === 'interview' && (value === null || value === '')) {
+                followUp.interview = undefined
+            }
+            else {
+                followUp[field] = value
+            }
+        }
+
+        await followUp.save()
+        return res.status(200).json({ message: 'Follow-up updated successfully.', followUp })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to update the follow-up.', error: error.message })
+        if (error.name === 'ValidationError' || error.name === 'CastError') {
+            return res.status(400).json({ message: 'Please check the follow-up details and try again.' })
+        }
+
+        console.error('Update follow-up error:', error)
+        return res.status(500).json({ message: 'Failed to update the follow-up.' })
     }
 }
 

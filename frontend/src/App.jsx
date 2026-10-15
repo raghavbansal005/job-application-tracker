@@ -19,9 +19,9 @@ import InterviewDetails from "./pages/app/InterviewDetails";
 import EditInterview from "./pages/app/EditInterview";
 
 import FollowUps from './pages/app/FollowUps'
-// import NewFollowUp from './pages/app/NewFollowUp'
-// import FollowUpDetails from './pages/app/FollowUpDetails'
-// import EditFollowUp from './pages/app/EditFollowUp'
+import NewFollowUp from './pages/app/NewFollowUp'
+import FollowUpDetails from './pages/app/FollowUpDetails'
+import EditFollowUp from './pages/app/EditFollowUp'
 
 function App() {
   return (
@@ -47,9 +47,9 @@ function App() {
             <Route path="/interviews/:id" element={<InterviewDetails />} />
 
             <Route path='/followups' element={<FollowUps />} />
-            {/* <Route path='/followups/new' element={<NewFollowUp />} />
+            <Route path='/followups/new' element={<NewFollowUp />} />
             <Route path='/followups/:id/edit' element={<EditFollowUp />} />
-            <Route path='/followups/:id' element={<FollowUpDetails />} /> */}
+            <Route path='/followups/:id' element={<FollowUpDetails />} />
           </Route>
         </Route>
       </Routes>

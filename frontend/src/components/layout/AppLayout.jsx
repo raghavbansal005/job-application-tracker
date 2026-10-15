@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Menu, UserRound, X } from "lucide-react";
+import { Bell, BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Menu, UserRound, X } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 
@@ -16,6 +16,7 @@ function AppLayout() {
         { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         { label: 'Applications', path: '/applications', icon: BriefcaseBusiness },
         { label: 'Interviews', path: '/interviews', icon: CalendarDays },
+        { label: 'Follow-Ups', path: '/followups', icon: Bell}
     ]
 
     const handleLogout = () => {
@@ -114,7 +115,7 @@ function AppLayout() {
                         </button>
                         <div className="min-w-0">
                             <p className="truncate text-sm font-medium">
-                                {location.pathname === "/dashboard" ? "Dashboard" : location.pathname.startsWith("/applications") ? "Applications" : location.pathname.startsWith("/interviews") ? "Interviews" : "JobTrack"}
+                                {location.pathname === "/dashboard" ? "Dashboard" : location.pathname.startsWith("/applications") ? "Applications" : location.pathname.startsWith("/interviews") ? "Interviews" : location.pathname.startsWith("/followups") ? "Follow-ups" : "JobTrack"}
                             </p>
                         </div>
                     </div>
