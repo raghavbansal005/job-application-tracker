@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import PageContainer from "@/components/layout/PageContainer";
 import PageHeader from "@/components/layout/PageHeader";
+import StatusBadge from "@/components/common/StatusBadge"
 
 import { Button } from "@/components/ui/button";
 import {
@@ -92,26 +93,26 @@ function InterviewDetails() {
                     </Button>
                     <PageHeader title="Interview Details" description="View and manage your interview details." action={
                         <div className="flex gap-2">
-                        <Button variant="outline" onClick={() => navigate(`/interviews/${id}/edit`)}>
-                            <Pencil className="mr-2 h-4 w-4" /> Edit
-                        </Button>
+                            <Button variant="outline" onClick={() => navigate(`/interviews/${id}/edit`)}>
+                                <Pencil className="mr-2 h-4 w-4" /> Edit
+                            </Button>
 
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="destructive"> <Trash2 className="mr-2 h-4 w-4" /> Delete </Button>
-                            </AlertDialogTrigger>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive"> <Trash2 className="mr-2 h-4 w-4" /> Delete </Button>
+                                </AlertDialogTrigger>
 
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Delete this interview?</AlertDialogTitle>
-                                    <AlertDialogDescription>This action cannot be undone. This interview will be permanently removed from your tracker.</AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={handleDelete} disabled={deleting}>{deleting ? "Deleting..." : "Delete Interview"}</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Delete this interview?</AlertDialogTitle>
+                                        <AlertDialogDescription>This action cannot be undone. This interview will be permanently removed from your tracker.</AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={handleDelete} disabled={deleting}>{deleting ? "Deleting..." : "Delete Interview"}</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </div>
                     } />
                 </div>
@@ -129,7 +130,7 @@ function InterviewDetails() {
                             <p className="mt-1 text-sm text-muted-foreground">{interview.type} Interview</p>
                         </div>
 
-                        <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">{interview.status}</span>
+                        <StatusBadge status={interview.status} />
                     </div>
 
                     <div className="mt-6 grid gap-6 sm:grid-cols-2">
