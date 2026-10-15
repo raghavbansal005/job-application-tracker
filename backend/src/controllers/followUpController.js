@@ -34,7 +34,7 @@ const createFollowUp = async (req, res) => {
 
 const getFollowUps = async (req, res) => {
     try {
-        const followUps = await FollowUp.find({ user: req.user })
+        const followUps = await FollowUp.find({ user: req.user }).sort({ dueDate: 1 }).populate('application', 'company jobTitle')
         return res.status(200).json({ followUps })
     }
     catch (error) {
