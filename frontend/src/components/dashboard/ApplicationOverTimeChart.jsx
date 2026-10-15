@@ -1,8 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
-function ApplicationOverTimeChart({ data }) {
+function ApplicationOverTimeChart({ data = [] }) {
     const chartData = data.map((item) => ({ month: item._id, applications: item.count }))
+    const formatMonth = (month) => {
+        const [year, monthNumber] = month.split('-').map(Number)
+        return new Date(year, monthNumber - 1, 1).toLocaleString(undefined, { month: 'short', year: 'numeric' })
+    }
 
     if (chartData.length === 0) {
         return (
@@ -31,10 +35,10 @@ function ApplicationOverTimeChart({ data }) {
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="month" />
+                            <XAxis dataKey="month" tickFormatter={formatMonth} />
                             <YAxis allowDecimals={false} />
                             <Tooltip />
-                            <Area type="monotone" dataKey="applications" stroke="var(--chart-1)" fill='var(--chart-1)' fillOpacity={0.15}/>
+                            <Area type="monotone" dataKey="applications" stroke="var(--chart-1)" fill='var(--chart-1)' fillOpacity={0.15} />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>

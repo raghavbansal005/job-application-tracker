@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 
-const Status_Color = {
+const statusColor = {
     Wishlist: "var(--chart-3)", Applied: "var(--chart-1)",
     Screening: "var(--chart-2)", Interview: "var(--chart-4)",
     Offer: "var(--chart-5)", Rejected: "var(--destructive)",
@@ -39,7 +39,7 @@ function ApplicationStatusChart({ data }) {
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie data={chartData} dataKey="count" nameKey="status" innerRadius={70} outerRadius={100} paddingAngle={3}>
-                                {chartData.map((item) => (<Cell key={item.status} fill={Status_Color[item.status] || "var(--chart-1)"} />))}
+                                {chartData.map((item) => (<Cell key={item.status} fill={statusColor[item.status] || "var(--chart-1)"} />))}
                             </Pie>
                             <Tooltip />
                         </PieChart>
@@ -59,7 +59,7 @@ function ApplicationStatusChart({ data }) {
                     {chartData.map((item) => {
                         return (
                             <div key={item.status} className='flex items-center gap-2 text-sm'>
-                                <span className='h-2.5 w-2.5 rounded-full' style={{ backgroundColor: Status_Color[item.status] || "var(--chart-1)" }} />
+                                <span className='h-2.5 w-2.5 rounded-full' style={{ backgroundColor: statusColor[item.status] || "var(--chart-1)" }} />
                                 <span className='text-muted-foreground'>{item.status}</span>
                                 <span className='font-medium text-foreground'>{item.count}</span>
                             </div>
