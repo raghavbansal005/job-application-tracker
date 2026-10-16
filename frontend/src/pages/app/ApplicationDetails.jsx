@@ -20,21 +20,22 @@ function ApplicationDetails() {
 
     const [application, setApplication] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const [loadError, setLoadError] = useState(null)
+    const [deleteError, setDeleteError] = useState(null)
     const [deleting, setDeleting] = useState(false)
 
     useEffect(() => {
         const loadApplication = async () => {
             try {
                 setLoading(true)
-                setError(null)
+                setLoadError(null)
 
                 const data = await getApplicationById(id)
                 setApplication(data.application)
             }
             catch (error) {
                 console.error("Failed to load application", error)
-                setError(error.response?.data?.message || "Failed to load application.")
+                setLoadError(error.response?.data?.message || "Failed to load application.")
             }
             finally {
                 setLoading(false)
@@ -46,14 +47,14 @@ function ApplicationDetails() {
     const handleDelete = async () => {
         try {
             setDeleting(true)
-            setError(null)
+            setDeleteError(null)
 
             await deleteApplication(id)
             navigate('/applications')
         }
         catch (error) {
             console.error('Failed to delete application', error)
-            setError(error.response?.data?.message || 'Failed to delete application')
+            setDeleteError(error.response?.data?.message || 'Failed to delete application')
         }
         finally {
             setDeleting(false)
@@ -70,14 +71,14 @@ function ApplicationDetails() {
         )
     }
 
-    if (error) {
+    if (loadError) {
         return (
             <PageContainer>
                 <div className="max-w-4xl">
                     <Button variant="ghost" className="-ml-2 mb-6" onClick={() => navigate('/applications')}>
                         <ArrowLeft className="mr-2 h-4 w-4" />Back to Applications
                     </Button>
-                    <p className="text-sm text-destructive">{error}</p>
+                    <p className="text-sm text-destructive">{loadError}</p>
                 </div>
             </PageContainer>
         )
@@ -92,13 +93,11 @@ function ApplicationDetails() {
                     </Button>
 
                     <PageHeader title={application.jobTitle} description={application.company} action={
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                             <Button variant="outline" onClick={() => navigate(`/applications/${application._id}/edit`)}> Edit Application</Button>
                             <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button variant="destructive" disabled={deleting}>
-                                        <Trash2 className="mr-2 h-4 w-4" />Delete
-                                    </Button>
+                                <AlertDialogTrigger render={<Button variant="destructive" disabled={deleting} />}>
+                                    <Trash2 className="mr-2 h-4 w-4" />Delete
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
@@ -153,13 +152,18 @@ function ApplicationDetails() {
 
                     {application.jobUrl && (
                         <div className="mt-6 border-t border-border/60 pt-6">
-                            <a href={application.jobUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline" >
+                            <a href={application.jobUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline" >
                                 View Job Posting
                                 <ExternalLink className="h-4 w-4" />
                             </a>
                         </div>
                     )}
                 </div>
+                {deleteError && (
+                    <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+                        <p className="text-sm text-destructive">{deleteError}</p>
+                    </div>
+                )}
             </div>
         </PageContainer>
     )

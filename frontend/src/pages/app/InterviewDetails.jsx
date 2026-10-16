@@ -21,21 +21,22 @@ function InterviewDetails() {
 
     const [interview, setInterview] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const [loadError, setLoadError] = useState(null)
+    const [deleteError, setDeleteError] = useState(null)
     const [deleting, setDeleting] = useState(false)
 
     useEffect(() => {
         const loadInterview = async () => {
             try {
                 setLoading(true)
-                setError(null)
+                setLoadError(null)
 
                 const data = await getInterviewById(id)
                 setInterview(data.interview)
             }
             catch (error) {
                 console.error("Failed to load interview.", error)
-                setError(error.response?.data?.message || "Failed to load interview.")
+                setLoadError(error.response?.data?.message || "Failed to load interview.")
             }
             finally {
                 setLoading(false)
@@ -47,14 +48,14 @@ function InterviewDetails() {
     const handleDelete = async () => {
         try {
             setDeleting(true)
-            setError(null)
+            setDeleteError(null)
 
             await deleteInterview(id)
             navigate("/interviews")
         }
         catch (error) {
             console.error("Failed to delete interview.", error)
-            setError(error.response?.data?.message || "Failed to delete interview.")
+            setDeleteError(error.response?.data?.message || "Failed to delete interview.")
         }
         finally {
             setDeleting(false)
@@ -71,14 +72,14 @@ function InterviewDetails() {
         )
     }
 
-    if (error && !interview) {
+    if (loadError) {
         return (
             <PageContainer>
                 <div className="max-w-4xl">
                     <Button variant="ghost" onClick={() => navigate("/interviews")}>
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Interviews
                     </Button>
-                    <p className="mt-6 text-sm text-destructive">{error}</p>
+                    <p className="mt-6 text-sm text-destructive">{loadError}</p>
                 </div>
             </PageContainer>
         )
@@ -92,14 +93,14 @@ function InterviewDetails() {
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Interviews
                     </Button>
                     <PageHeader title="Interview Details" description="View and manage your interview details." action={
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                             <Button variant="outline" onClick={() => navigate(`/interviews/${id}/edit`)}>
                                 <Pencil className="mr-2 h-4 w-4" /> Edit
                             </Button>
 
                             <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button variant="destructive"> <Trash2 className="mr-2 h-4 w-4" /> Delete </Button>
+                                <AlertDialogTrigger render={<Button variant="destructive" disabled={deleting} />}>
+                                    <Trash2 className="mr-2 h-4 w-4" />Delete
                                 </AlertDialogTrigger>
 
                                 <AlertDialogContent>
@@ -117,9 +118,9 @@ function InterviewDetails() {
                     } />
                 </div>
 
-                {error && (
-                    <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
-                        <p className="text-sm text-destructive">{error}</p>
+                {deleteError && (
+                    <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+                        <p className="text-sm text-destructive">{deleteError}</p>
                     </div>
                 )}
 
@@ -159,7 +160,7 @@ function InterviewDetails() {
                     {interview.meetingLink && (
                         <div className="mt-6 border-t border-border/60 pt-6">
                             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Meeting Link</p>
-                            <a href={interview.meetingLink} target="_blank" rel="noreferrer"
+                            <a href={interview.meetingLink} target="_blank" rel="noopener noreferrer"
                                 className="mt-2 inline-flex items-center text-sm font-medium text-primary hover:underline">
                                 Join Interview <ExternalLink className="ml-2 h-4 w-4" />
                             </a>
