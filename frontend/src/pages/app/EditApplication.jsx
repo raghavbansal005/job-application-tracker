@@ -17,12 +17,14 @@ function EditApplication() {
 
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [loadError, setLoadError] = useState(null)
     const [error, setError] = useState(null)
 
     useEffect(() => {
         const loadApplication = async () => {
             try {
                 setLoading(true)
+                setLoadError(null)
                 setError(null)
                 const data = await getApplicationById(id)
                 const application = data.application
@@ -36,7 +38,7 @@ function EditApplication() {
             }
             catch (error) {
                 console.error('Failed to load application.', error)
-                setError(error.response?.data?.message || 'Failed to load application.')
+                setLoadError(error.response?.data?.message || 'Failed to load application.')
             }
             finally {
                 setLoading(false)
@@ -77,14 +79,14 @@ function EditApplication() {
         )
     }
 
-    if (error) {
+    if (loadError) {
         return (
             <PageContainer>
-                <div className="max-w-4xl">
-                    <Button variant="ghost" className="-ml-2 mb-6" onClick={() => navigate(`/applications/${id}`)}>
-                        <ArrowLeft className="mr-2 h-4 w-4" />Back to Application
+                <div className="max-w-4xl space-y-4">
+                    <p className="text-sm text-destructive">{loadError}</p>
+                    <Button variant="outline" onClick={() => navigate("/applications")}>
+                        <ArrowLeft className="mr-2 h-4 w-4" />Back to Applications
                     </Button>
-                    <p className="text-sm text-destructive">{error}</p>
                 </div>
             </PageContainer>
         )
@@ -100,7 +102,7 @@ function EditApplication() {
                     <PageHeader title="Edit Application" description="Update the details of your job application." />
                 </div>
 
-                <form onSubmit={handleSubmit} className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
+                <form onSubmit={handleSubmit} aria-busy={saving} className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
                     <div className="grid gap-6 sm:grid-cols-2">
                         <FormField id="company" label="Company" required>
                             <input id="company" name="company" type="text" value={formData.company} onChange={handleChange} required
@@ -114,8 +116,8 @@ function EditApplication() {
 
                         <div className="sm:col-span-2">
                             <FormField id="jobUrl" label="Job URL">
-                            <input id="jobUrl" name="jobUrl" type="url" value={formData.jobUrl} onChange={handleChange} placeholder="https://example.com/job"
-                                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                <input id="jobUrl" name="jobUrl" type="url" value={formData.jobUrl} onChange={handleChange} placeholder="https://example.com/job"
+                                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
                             </FormField>
                         </div>
 
