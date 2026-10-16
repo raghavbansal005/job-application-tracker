@@ -18,6 +18,7 @@ function Applications() {
 
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('All')
+    const [sortBy, setSortBy] = useState('newest')
 
     useEffect(() => {
         const loadApplication = async () => {
@@ -40,14 +41,31 @@ function Applications() {
     }, [])
 
     const filteredApplication = useMemo(() => {
-        const search = searchTerm.toLowerCase().trim()
-        return applications.filter((application) => {
-            const matchesSearch = application.company?.toLowerCase().includes(search) || application.jobTitle?.toLowerCase().includes(search)
-            const matchesStatus = statusFilter === 'All' || application.status === statusFilter
+        const search = searchTerm.toLowerCase().trim();
+        const filtered = applications.filter((application) => {
+            const matchesSearch = application.company?.toLowerCase().includes(search) || application.jobTitle?.toLowerCase().includes(search);
+            const matchesStatus = statusFilter === "All" || application.status === statusFilter;
+            return matchesSearch && matchesStatus;
+        });
 
-            return matchesSearch && matchesStatus
-        })
-    }, [applications, searchTerm, statusFilter])
+        return [...filtered].sort((a, b) => {
+            if (sortBy === "company") return (a.company || "").localeCompare(b.company || "");
+            if (sortBy === "jobTitle") return (a.jobTitle || "").localeCompare(b.jobTitle || "");
+
+            const dateA = a.appliedDate ? new Date(a.appliedDate).getTime() : null;
+            const dateB = b.appliedDate ? new Date(b.appliedDate).getTime() : null;
+
+            if (dateA === null && dateB === null) return 0;
+            if (dateA === null) return 1;
+            if (dateB === null) return -1;
+
+            if (sortBy === "oldest") {
+                return dateA - dateB;
+            }
+
+            return dateB - dateA;
+        });
+    }, [applications, searchTerm, statusFilter, sortBy]);
 
     if (loading) {
         return (
@@ -74,14 +92,14 @@ function Applications() {
                     </Button>
                 } />
 
-                <div className="flex flex-col gap-3 sm:flex-row">
+                <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card p-4 sm:flex-row sm:items-center">
                     <div className="relative flex-1">
                         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <input type="text" placeholder="Search by company or job title" value={searchTerm}
                             onChange={(event) => setSearchTerm(event.target.value)}
                             className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
                     </div>
-                    <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
+                    <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="w-full sm:w-auto h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
                         <option value="All">All Statuses</option>
                         <option value="Wishlist">Wishlist</option>
                         <option value="Applied">Applied</option>
@@ -91,11 +109,12 @@ function Applications() {
                         <option value="Rejected">Rejected</option>
                         <option value="Withdrawn">Withdrawn</option>
                     </select>
-                </div>
-                <div className="flex items-center justify-between">
-                    <p className="text-sm text-muted-foreground">
-                        {filteredApplication.length}{" "}{filteredApplication.length === 1 ? "application" : "applications"}
-                    </p>
+                    <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} aria-label="Sort applications" className="w-full sm:w-auto h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
+                        <option value="newest">Newest first</option>
+                        <option value="oldest">Oldest first</option>
+                        <option value="company">Company A–Z</option>
+                        <option value="jobTitle">Job title A–Z</option>
+                    </select>
                 </div>
 
                 {filteredApplication.length === 0 ? (
