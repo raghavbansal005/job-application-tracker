@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Application = require('../models/Application')
 const Interview = require('../models/Interview')
-const FollowUp = require('../models/Followup')
+const FollowUp = require('../models/FollowUp')
 
 const getDashboard = async (req, res) => {
     try {

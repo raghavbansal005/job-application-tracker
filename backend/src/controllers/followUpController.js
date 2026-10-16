@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const FollowUp = require('../models/Followup')
+const FollowUp = require('../models/FollowUp')
 const Application = require('../models/Application')
 const Interview = require('../models/Interview')
 
