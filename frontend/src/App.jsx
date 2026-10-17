@@ -6,6 +6,7 @@ import ProtectedRoutes from "./pages/auth/ProtectedRoutes";
 
 import AppLayout from "./components/layout/AppLayout";
 
+import LandingPage from "./pages/public/LandingPage"
 import Dashboard from "./pages/app/Dashboard";
 
 import Applications from "./pages/app/Applications";
@@ -27,13 +28,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         <Route element={<ProtectedRoutes />}>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
             <Route path="/dashboard" element={<Dashboard />} />
 
             <Route path="/applications" element={<Applications />} />
