@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom'
-import {
-    ArrowDownRight, ArrowRight, ArrowUpRight, BarChart3, BriefcaseBusiness, Check, ChevronDown,
-    CircleHelp, Clock3, FileText, Menu, Sparkles, Target, X, CalendarDays, Search, Bell
-} from "lucide-react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, BarChart3, BriefcaseBusiness, Check, ChevronDown, CircleHelp, Clock3, FileText, Menu, Sparkles, Target, X, CalendarDays, Search, Bell } from "lucide-react";
 
 const features = [
     {
