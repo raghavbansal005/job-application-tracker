@@ -1,11 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
-import { ArrowRight, BriefcaseBusiness, ExternalLink, Plus, Search } from "lucide-react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { ArrowRight, BriefcaseBusiness, Columns3, ExternalLink, List, Plus, Search } from "lucide-react";
 
-import { getApplication } from "@/services/applicationService";
+import { getApplication, updateApplication } from "@/services/applicationService";
 
 import PageHeader from "@/components/layout/PageHeader";
 import PageContainer from "@/components/layout/PageContainer";
 import StatusBadge from "@/components/common/StatusBadge";
+import ApplicationBoard from "@/components/applications/ApplicationBoard";
 
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +20,11 @@ function Applications() {
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('All')
     const [sortBy, setSortBy] = useState('newest')
+    const [view, setView] = useState('list')
+    const [updatingIds, setUpdatingIds] = useState([])
+    const [statusMessage, setStatusMessage] = useState(null)
+    const updatingRef = useRef(new Set())
+    const messageTimer = useRef(null)
 
     useEffect(() => {
         const loadApplication = async () => {
@@ -44,7 +50,7 @@ function Applications() {
         const search = searchTerm.toLowerCase().trim();
         const filtered = applications.filter((application) => {
             const matchesSearch = application.company?.toLowerCase().includes(search) || application.jobTitle?.toLowerCase().includes(search);
-            const matchesStatus = statusFilter === "All" || application.status === statusFilter;
+            const matchesStatus = view === "board" || statusFilter === "All" || application.status === statusFilter;
             return matchesSearch && matchesStatus;
         });
 
@@ -65,7 +71,51 @@ function Applications() {
 
             return dateB - dateA;
         });
-    }, [applications, searchTerm, statusFilter, sortBy]);
+    }, [applications, searchTerm, statusFilter, sortBy, view])
+
+    useEffect(() => {
+        return () => {
+            if (messageTimer.current) {
+                clearTimeout(messageTimer.current)
+            }
+        }
+    }, [])
+
+    const showStatusMessage = (type, text) => {
+        setStatusMessage({ type, text })
+
+        if (messageTimer.current) {
+            clearTimeout(messageTimer.current)
+        }
+        messageTimer.current = setTimeout(() => setStatusMessage(null), 4000)
+    }
+
+    const handleStatusChange = async (application, newStatus) => {
+        const id = application._id
+        const previousStatus = application.status
+
+        if (newStatus === previousStatus) return
+        if (updatingRef.current.has(id)) return
+
+        updatingRef.current.add(id)
+        setUpdatingIds(Array.from(updatingRef.current))
+        setApplications((current) => current.map((item) => item._id === id ? { ...item, status: newStatus } : item))
+
+        try {
+            const data = await updateApplication(id, { status: newStatus })
+            setApplications((current) => current.map((item) => item._id === id ? data.application : item))
+            showStatusMessage("success", `Moved "${application.jobTitle}" to ${newStatus}.`)
+        }
+        catch (error) {
+            console.error("Failed to update status:", error)
+            setApplications((current) => current.map((item) => item._id === id ? { ...item, status: previousStatus } : item))
+            showStatusMessage("error", error.response?.data?.message || "Failed to update status. The change was reverted.")
+        }
+        finally {
+            updatingRef.current.delete(id)
+            setUpdatingIds(Array.from(updatingRef.current))
+        }
+    }
 
     if (loading) {
         return (
@@ -99,16 +149,28 @@ function Applications() {
                             onChange={(event) => setSearchTerm(event.target.value)}
                             className="h-10 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
                     </div>
-                    <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="w-full sm:w-auto h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
-                        <option value="All">All Statuses</option>
-                        <option value="Wishlist">Wishlist</option>
-                        <option value="Applied">Applied</option>
-                        <option value="Screening">Screening</option>
-                        <option value="Interview">Interview</option>
-                        <option value="Offer">Offer</option>
-                        <option value="Rejected">Rejected</option>
-                        <option value="Withdrawn">Withdrawn</option>
-                    </select>
+                    {view === 'list' && (
+                        <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} className="w-full sm:w-auto h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
+                            <option value="All">All Statuses</option>
+                            <option value="Wishlist">Wishlist</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Screening">Screening</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Offer">Offer</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Withdrawn">Withdrawn</option>
+                        </select>
+                    )}
+                    <div role="group" aria-label="Application view" className="flex h-10 shrink-0 overflow-hidden rounded-md border border-input">
+                        <button type="button" onClick={() => setView('list')} aria-pressed={view === 'list'}
+                            className={`flex flex-1 items-center justify-center gap-2 px-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${view === 'list' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}>
+                            <List className="h-4 w-4" />List
+                        </button>
+                        <button type="button" onClick={() => setView('board')} aria-pressed={view === 'board'}
+                            className={`flex flex-1 items-center justify-center gap-2 px-3 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${view === 'board' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:text-foreground'}`}>
+                            <Columns3 className="h-4 w-4" />Board
+                        </button>
+                    </div>
                     <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} aria-label="Sort applications" className="w-full sm:w-auto h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20">
                         <option value="newest">Newest first</option>
                         <option value="oldest">Oldest first</option>
@@ -117,6 +179,13 @@ function Applications() {
                     </select>
                 </div>
 
+                <div role="status" aria-live="polite">
+                    {statusMessage && (
+                        <p className={`rounded-md border px-3 py-2 text-sm ${statusMessage.type === "error" ? "border-destructive/30 bg-destructive/10 text-destructive" : "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-400"}`}>
+                            {statusMessage.text}
+                        </p>
+                    )}
+                </div>
                 {filteredApplication.length === 0 ? (
                     <div className="flex min-h-[300px] items-center justify-center rounded-xl border border-border/60 bg-card">
                         <div className="text-center">
@@ -125,6 +194,8 @@ function Applications() {
                             <p className="mt-1 text-sm text-muted-foreground">{applications.length === 0 ? "Start tracking your job applications here." : "Try changing your search or status filter."}</p>
                         </div>
                     </div>
+                ) : view === 'board' ? (
+                    <ApplicationBoard applications={filteredApplication} onStatusChange={handleStatusChange} updatingIds={updatingIds} />
                 ) : (
                     <div className="space-y-4">
                         {filteredApplication.map((application) => {
@@ -176,7 +247,7 @@ function Applications() {
                     </div>
                 )}
             </div>
-        </PageContainer>
+        </PageContainer >
     )
 }
 
