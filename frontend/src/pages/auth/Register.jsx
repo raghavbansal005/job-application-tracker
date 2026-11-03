@@ -16,6 +16,7 @@ function Register() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
+    const isBusy = loading || Boolean(success)
 
     useEffect(() => {
         return () => {
@@ -81,36 +82,36 @@ function Register() {
                 )}
 
                 {success && (
-                    <div role="status" aria-live="polite" className="mb-6 rounded-lg border border-green-500/30 bg-green-500/5 p-4 text-sm text-green-600">
+                    <div role="status" aria-live="polite" className="mb-6 rounded-lg border border-green-500/30 bg-green-500/5 p-4 text-sm text-green-600 dark:text-green-400">
                         {success}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} aria-busy={loading} className="space-y-5 rounded-xl border border-border/60 bg-card p-6 shadow-sm sm:p-8">
+                <form onSubmit={handleSubmit} aria-busy={isBusy} className="space-y-5 rounded-xl border border-border/60 bg-card p-6 shadow-sm sm:p-8">
                     <FormField id="name" label="Full Name" required>
-                        <input id="name" name="name" type="text" value={formState.name} onChange={handleChange} placeholder="Enter your name" autoComplete="name" maxLength={100} required disabled={loading}
+                        <input id="name" name="name" type="text" value={formState.name} onChange={handleChange} placeholder="Enter your name" autoComplete="name" maxLength={100} required disabled={isBusy}
                             className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60" />
                     </FormField>
 
                     <FormField id="email" label="Email" required>
-                        <input id="email" name="email" type="email" value={formState.email} onChange={handleChange} placeholder="you@example.com" autoComplete="email" inputMode="email" autoCapitalize="none" spellCheck={false} required disabled={loading}
+                        <input id="email" name="email" type="email" value={formState.email} onChange={handleChange} placeholder="you@example.com" autoComplete="email" inputMode="email" autoCapitalize="none" spellCheck={false} required disabled={isBusy}
                             className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60" />
                     </FormField>
 
                     <FormField id="password" label="Password" required>
                         <div className="relative">
-                            <input id="password" name="password" type={showPassword ? "text" : "password"} value={formState.password} onChange={handleChange} placeholder="Create a password" autoComplete="new-password" required disabled={loading}
+                            <input id="password" name="password" type={showPassword ? "text" : "password"} value={formState.password} onChange={handleChange} placeholder="Create a password" autoComplete="new-password" required disabled={isBusy}
                                 className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 pr-12 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60" />
 
-                            <button type="button" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} disabled={loading}
+                            <button type="button" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} disabled={isBusy}
                                 className="absolute inset-y-0 right-0 flex items-center justify-center rounded-r-md px-3 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60">
                                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                             </button>
                         </div>
                     </FormField>
 
-                    <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? "Creating account..." : "Create Account"}
+                    <Button type="submit" className="w-full" disabled={isBusy}>
+                        {loading ? "Creating account..." : success ? "Account created" : "Create Account"}
                     </Button>
                 </form>
 
