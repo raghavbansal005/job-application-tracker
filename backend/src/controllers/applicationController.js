@@ -44,17 +44,32 @@ const getApplicationById = async (req, res) => {
 
 const updateApplication = async (req, res) => {
     const { id } = req.params
-    const updateData = req.body
+    const allowedFields = ['company', 'jobTitle', 'jobUrl', 'location', 'employmentType', 'status', 'appliedDate']
+    const updateData = {}
+
+    for (const field of allowedFields) {
+        if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+            updateData[field] = req.body[field]
+        }
+    }
+
+    if (Object.keys(updateData).length === 0) {
+        return res.status(400).json({ message: 'Please provide at least one field to update.' })
+    }
 
     try {
-        const application = await Application.findOneAndUpdate({ _id: id, user: req.user }, updateData, { new: true })
+        const application = await Application.findOneAndUpdate({ _id: id, user: req.user }, updateData, { new: true, runValidators: true })
         if (application) {
             return res.status(200).json({ application })
         }
         return res.status(404).json({ message: 'Application not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to update application.', error: error.message })
+        if (error.name === 'ValidationError' || error.name === 'CastError') {
+            return res.status(400).json({ message: 'Please check the application details and try again.' })
+        }
+        console.error('Update application error:', error)
+        return res.status(500).json({ message: 'Failed to update application.' })
     }
 }
 

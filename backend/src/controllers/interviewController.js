@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const Interview = require('../models/Interview')
 const Application = require('../models/Application')
 
@@ -49,17 +50,42 @@ const getInterviewById = async (req, res) => {
 
 const updateInterview = async (req, res) => {
     const { id } = req.params
-    const updateData = req.body
+    const allowedFields = ['application', 'type', 'status', 'round', 'scheduledAt', 'interviewer', 'meetingLink', 'notes']
+    const updateData = {}
+
+    for (const field of allowedFields) {
+        if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+            updateData[field] = req.body[field]
+        }
+    }
+
+    if (Object.keys(updateData).length === 0) {
+        return res.status(400).json({ message: 'Please provide at least one field to update.' })
+    }
 
     try {
-        const interview = await Interview.findOneAndUpdate({ _id: id, user: req.user }, updateData, { new: true })
+        if (updateData.application !== undefined) {
+            if (!mongoose.isValidObjectId(updateData.application)) {
+                return res.status(400).json({ message: 'Please provide a valid application.' })
+            }
+            const ownedApplication = await Application.findOne({ _id: updateData.application, user: req.user })
+            if (!ownedApplication) {
+                return res.status(404).json({ message: 'Application not found.' })
+            }
+        }
+
+        const interview = await Interview.findOneAndUpdate({ _id: id, user: req.user }, updateData, { new: true, runValidators: true })
         if (interview) {
             return res.status(200).json({ interview })
         }
         return res.status(404).json({ message: 'Interview Details not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to update interview.', error: error.message })
+        if (error.name === 'ValidationError' || error.name === 'CastError') {
+            return res.status(400).json({ message: 'Please check the interview details and try again.' })
+        }
+        console.error('Update interview error:', error)
+        return res.status(500).json({ message: 'Failed to update interview.' })
     }
 }
 
