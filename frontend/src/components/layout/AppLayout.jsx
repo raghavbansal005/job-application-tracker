@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import ThemeToggle from "@/components/common/ThemeToggle";
 
 function AppLayout() {
     const { user, logout } = useAuth();
@@ -120,7 +121,8 @@ function AppLayout() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
+                        <ThemeToggle />
                         <div className="hidden text-right sm:block">
                             <p className="text-sm font-medium">JobTrack User</p>
                             <p className="text-xs text-muted-foreground">Career workspace</p>
