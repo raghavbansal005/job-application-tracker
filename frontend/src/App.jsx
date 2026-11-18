@@ -8,6 +8,7 @@ import AppLayout from "./components/layout/AppLayout";
 
 import LandingPage from "./pages/public/LandingPage"
 import Dashboard from "./pages/app/Dashboard";
+import Settings from "./pages/app/Settings";
 
 import Applications from "./pages/app/Applications";
 import NewApplication from "./pages/app/NewApplication";
@@ -35,6 +36,7 @@ function App() {
         <Route element={<ProtectedRoutes />}>
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/settings" element={<Settings />} />
 
             <Route path="/applications" element={<Applications />} />
             <Route path="/applications/new" element={<NewApplication />} />

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { ArrowRight, BriefcaseBusiness, Columns3, ExternalLink, List, Plus, Search } from "lucide-react";
 
 import { getApplication, updateApplication } from "@/services/applicationService";
+import { useAuth } from "@/context/AuthContext";
 
 import PageHeader from "@/components/layout/PageHeader";
 import PageContainer from "@/components/layout/PageContainer";
@@ -13,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 
 function Applications() {
     const navigate = useNavigate()
+    const { user } = useAuth()
+
     const [applications, setApplications] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -20,7 +23,7 @@ function Applications() {
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('All')
     const [sortBy, setSortBy] = useState('newest')
-    const [view, setView] = useState('list')
+    const [view, setView] = useState(user?.preferences?.defaultApplicationView === 'board' ? 'board' : 'list')
     const [updatingIds, setUpdatingIds] = useState([])
     const [statusMessage, setStatusMessage] = useState(null)
     const updatingRef = useRef(new Set())

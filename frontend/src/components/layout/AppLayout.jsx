@@ -1,4 +1,4 @@
-import { Bell, BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Menu, UserRound, X } from "lucide-react";
+import { Bell, BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Menu, Settings, UserRound, X } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
 
@@ -17,7 +17,8 @@ function AppLayout() {
         { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         { label: 'Applications', path: '/applications', icon: BriefcaseBusiness },
         { label: 'Interviews', path: '/interviews', icon: CalendarDays },
-        { label: 'Follow-Ups', path: '/followups', icon: Bell}
+        { label: 'Follow-Ups', path: '/followups', icon: Bell },
+        { label: 'Settings', path: '/settings', icon: Settings }
     ]
 
     const handleLogout = () => {
@@ -92,8 +93,8 @@ function AppLayout() {
                                 <UserRound className="h-4 w-4" />
                             </div>
                             <div className="min-w-0">
-                                <p className="truncate text-sm font-medium">JobTrack User</p>
-                                <p className="truncate text-xs text-muted-foreground">ID: {user?.userId || "Authenticated"}</p>
+                                <p className="truncate text-sm font-medium">{user?.name || "JobTrack User"}</p>
+                                <p className="truncate text-xs text-muted-foreground">{user?.email || "Signed in"}</p>
                             </div>
                         </div>
                     )}
@@ -124,7 +125,7 @@ function AppLayout() {
                     <div className="flex items-center gap-3">
                         <ThemeToggle />
                         <div className="hidden text-right sm:block">
-                            <p className="text-sm font-medium">JobTrack User</p>
+                            <p className="text-sm font-medium">{user?.name || "JobTrack User"}</p>
                             <p className="text-xs text-muted-foreground">Career workspace</p>
                         </div>
                         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
