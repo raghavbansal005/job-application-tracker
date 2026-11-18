@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const FollowUp = require('../models/FollowUp')
 const Application = require('../models/Application')
 const Interview = require('../models/Interview')
+const errorDetail = require('../utils/errorDetail')
 
 const createFollowUp = async (req, res) => {
     const { application, interview, type, status, dueDate, notes } = req.body
@@ -29,7 +30,7 @@ const createFollowUp = async (req, res) => {
         return res.status(404).json({ message: 'Application not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to create Follow-up.', error: error.message })
+        return res.status(500).json({ message: 'Failed to create Follow-up.', error: errorDetail(error) })
     }
 }
 
@@ -39,7 +40,7 @@ const getFollowUps = async (req, res) => {
         return res.status(200).json({ followUps })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Could not find the Follow Up.', error: error.message })
+        return res.status(500).json({ message: 'Could not find the Follow Up.', error: errorDetail(error) })
     }
 }
 
@@ -54,7 +55,7 @@ const getFollowUpById = async (req, res) => {
         return res.status(404).json({ message: 'Follow-Up not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to find Follow-Up.', error: error.message })
+        return res.status(500).json({ message: 'Failed to find Follow-Up.', error: errorDetail(error) })
     }
 }
 
@@ -123,7 +124,7 @@ const deleteFollowUp = async (req, res) => {
         return res.status(404).json({ message: 'Follow-Up details not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to delete the follow-up.', error: error.message })
+        return res.status(500).json({ message: 'Failed to delete the follow-up.', error: errorDetail(error) })
     }
 }
 
@@ -133,7 +134,7 @@ const getPendingFollowUps = async (req, res) => {
         return res.status(200).json({ followUps })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Could not find the pending follow-ups.', error: error.message })
+        return res.status(500).json({ message: 'Could not find the pending follow-ups.', error: errorDetail(error) })
     }
 }
 
@@ -143,7 +144,7 @@ const getOverdueFollowUps = async (req, res) => {
         return res.status(200).json({ followUps })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Could not find the overdue follow-ups.', error: error.message })
+        return res.status(500).json({ message: 'Could not find the overdue follow-ups.', error: errorDetail(error) })
     }
 }
 

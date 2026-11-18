@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Interview = require('../models/Interview')
 const Application = require('../models/Application')
+const errorDetail = require('../utils/errorDetail')
 
 const createInterview = async (req, res) => {
     const { application, type, round, scheduledAt, interviewer, meetingLink, notes } = req.body
@@ -29,7 +30,7 @@ const getInterviews = async (req, res) => {
         return res.status(200).json({ interviews })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Could not find Interview.', error: error.message })
+        return res.status(500).json({ message: 'Could not find Interview.', error: errorDetail(error) })
     }
 }
 
@@ -44,7 +45,7 @@ const getInterviewById = async (req, res) => {
         return res.status(404).json({ message: 'Interview details not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to find Interview details.', error: error.message })
+        return res.status(500).json({ message: 'Failed to find Interview details.', error: errorDetail(error) })
     }
 }
 
@@ -100,7 +101,7 @@ const deleteInterview = async (req, res) => {
         return res.status(404).json({ message: 'Interview Details not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to delete interview.', error: error.message })
+        return res.status(500).json({ message: 'Failed to delete interview.', error: errorDetail(error) })
     }
 }
 
@@ -110,7 +111,7 @@ const getUpcomingInterviews = async (req, res) => {
         return res.status(200).json({ interviews })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Could not find upcoming interviews.', error: error.message })
+        return res.status(500).json({ message: 'Could not find upcoming interviews.', error: errorDetail(error) })
     }
 }
 

@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const Application = require('../models/Application')
 const Interview = require('../models/Interview')
 const FollowUp = require('../models/FollowUp')
+const errorDetail = require('../utils/errorDetail')
 
 const getDashboard = async (req, res) => {
     try {
@@ -31,7 +32,7 @@ const getDashboard = async (req, res) => {
         return res.status(200).json({ summary: formattedSummary, applicationByStatus, applicationOverTime, upcomingInterviews, pendingFollowUps, overdueFollowUps })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to get dashboard data.', error: error.message })
+        return res.status(500).json({ message: 'Failed to get dashboard data.', error: errorDetail(error) })
     }
 }
 

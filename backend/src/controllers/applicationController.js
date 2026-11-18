@@ -1,4 +1,5 @@
 const Application = require('../models/Application')
+const errorDetail = require('../utils/errorDetail')
 
 const createApplication = async (req, res) => {
     const { company, jobTitle, jobUrl, location, employmentType, status, appliedDate } = req.body
@@ -13,7 +14,7 @@ const createApplication = async (req, res) => {
         return res.status(201).json({ message: 'Application created successfully.', application: newApplication })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to create application.', error: error.message })
+        return res.status(500).json({ message: 'Failed to create application.', error: errorDetail(error) })
     }
 }
 
@@ -23,7 +24,7 @@ const getApplications = async (req, res) => {
         return res.status(200).json({ applications })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Could not find application.', error: error.message })
+        return res.status(500).json({ message: 'Could not find application.', error: errorDetail(error) })
     }
 }
 
@@ -38,7 +39,7 @@ const getApplicationById = async (req, res) => {
         return res.status(404).json({ message: 'Application not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Could not find application.', error: error.message })
+        return res.status(500).json({ message: 'Could not find application.', error: errorDetail(error) })
     }
 }
 
@@ -84,7 +85,7 @@ const deleteApplication = async (req, res) => {
         return res.status(404).json({ message: 'Application not found.' })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to delete application.', error: error.message })
+        return res.status(500).json({ message: 'Failed to delete application.', error: errorDetail(error) })
     }
 }
 

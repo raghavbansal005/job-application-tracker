@@ -41,8 +41,10 @@ function Register() {
         const email = formState.email.trim()
 
         if (!name || !email || !formState.password) {
-            setError("Please complete all fields.")
-            return
+            if (formState.password.length < 8) {
+                setError("Password must be at least 8 characters.")
+                return
+            }
         }
 
         try {
@@ -109,6 +111,7 @@ function Register() {
                             </button>
                         </div>
                     </FormField>
+                    <p className="mt-1.5 text-xs text-muted-foreground">For Password use at least 8 characters.</p>
 
                     <Button type="submit" className="w-full" disabled={isBusy}>
                         {loading ? "Creating account..." : success ? "Account created" : "Create Account"}

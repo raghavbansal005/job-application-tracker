@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Application = require('../models/Application')
+const errorDetail = require('../utils/errorDetail')
 
 const getApplicationByStatus = async (req, res) => {
     try {
@@ -10,7 +11,7 @@ const getApplicationByStatus = async (req, res) => {
         return res.status(200).json({ applications })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to get Application.', error: error.message })
+        return res.status(500).json({ message: 'Failed to get Application.', error: errorDetail(error) })
     }
 }
 
@@ -25,7 +26,7 @@ const getApplicationSummary = async (req, res) => {
         return res.status(200).json({ summary: formattedSummary })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to get Application.', error: error.message })
+        return res.status(500).json({ message: 'Failed to get Application.', error: errorDetail(error) })
     }
 }
 
@@ -39,7 +40,7 @@ const getApplicationsOverTime = async (req, res) => {
         return res.status(200).json({ applicationsOverTime })
     }
     catch (error) {
-        return res.status(500).json({ message: 'Failed to get Application.', error: error.message })
+        return res.status(500).json({ message: 'Failed to get Application.', error: errorDetail(error) })
     }
 }
 
