@@ -2,6 +2,8 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { BriefcaseBusiness, Menu, X } from "lucide-react"
 
+import ThemeToggle from "@/components/common/ThemeToggle"
+
 const navLinks = [
     { label: "Home", href: "#top" },
     { label: "Features", href: "#features" },
@@ -34,6 +36,7 @@ function LandingHeader() {
                 </div>
 
                 <div className="hidden items-center gap-3 lg:flex">
+                    <ThemeToggle variant="hero" />
                     <Link to="/login" className={`rounded-full border border-hero-foreground/40 px-5 py-2.5 text-sm font-medium transition-colors hover:bg-hero-foreground/10 ${focusRing}`}>
                         Log in
                     </Link>
@@ -42,11 +45,13 @@ function LandingHeader() {
                     </Link>
                 </div>
 
-                <button type="button" onClick={() => setMenuOpen((open) => !open)}
-                    aria-expanded={menuOpen} aria-controls="landing-mobile-menu" aria-label={menuOpen ? "Close menu" : "Open menu"}
-                    className={`flex h-11 w-11 items-center justify-center rounded-lg border border-hero-foreground/40 lg:hidden ${focusRing}`}>
-                    {menuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
-                </button>
+                <div className="flex items-center gap-3 lg:hidden">
+                    <ThemeToggle variant="hero" />
+                    <button type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-controls="landing-mobile-menu" aria-label={menuOpen ? "Close menu" : "Open menu"}
+                        className={`flex h-11 w-11 items-center justify-center rounded-lg border border-hero-foreground/40 ${focusRing}`}>
+                        {menuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+                    </button>
+                </div>
             </nav>
 
             {menuOpen && (
