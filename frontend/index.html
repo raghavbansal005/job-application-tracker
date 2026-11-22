@@ -9,7 +9,7 @@
       (function () {
         try {
           var saved = localStorage.getItem("jobtrack-theme")
-          var dark = saved === "dark" || (saved === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+          var dark = saved === "dark" || ((saved === "system" || !saved) && window.matchMedia("(prefers-color-scheme: dark)").matches);          
           document.documentElement.classList.toggle("dark", dark)
           document.documentElement.style.colorScheme = dark ? "dark" : "light"
         } catch (e) { }

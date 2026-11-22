@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 
-import AuthLayout from "@/components/auth/AuthLayout"
-import PasswordInput from "@/components/auth/PasswordInput"
 import AuthLayout from "./AuthLayout"
 import { AuthInput, PasswordInput } from "./AuthFields"
 
