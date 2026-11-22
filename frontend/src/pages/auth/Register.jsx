@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Eye, EyeOff } from "lucide-react"
+
+import AuthLayout from "@/components/auth/AuthLayout"
+import PasswordInput from "@/components/auth/PasswordInput"
+import AuthLayout from "./AuthLayout"
+import { AuthInput, PasswordInput } from "./AuthFields"
 
 import FormField from "@/components/common/FormField"
 import { Button } from "@/components/ui/button"
@@ -12,7 +16,6 @@ function Register() {
     const redirectTimer = useRef(null)
 
     const [formState, setFormState] = useState({ name: "", email: "", password: "" })
-    const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [success, setSuccess] = useState(null)
@@ -41,10 +44,13 @@ function Register() {
         const email = formState.email.trim()
 
         if (!name || !email || !formState.password) {
-            if (formState.password.length < 8) {
-                setError("Password must be at least 8 characters.")
-                return
-            }
+            setError("Please complete all fields.")
+            return
+        }
+
+        if (formState.password.length < 8) {
+            setError("Password must be at least 8 characters.")
+            return
         }
 
         try {
@@ -66,66 +72,39 @@ function Register() {
     }
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 sm:px-6">
-            <div className="w-full max-w-md">
-                <div className="mb-8 text-center">
-                    <Link to="/" className="text-sm font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                        JobTrack
-                    </Link>
-
-                    <h1 className="mt-5 text-3xl font-bold tracking-tight">Create your account</h1>
-                    <p className="mt-2 text-sm text-muted-foreground">Start managing your job search with JobTrack</p>
-                </div>
-
+        <AuthLayout title="Create your account" subtitle="Start organizing your job search in minutes."
+            footer={<>Already have an account?{" "}<Link to="/login" className="font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Sign in</Link></>}>
+            <form onSubmit={handleSubmit} aria-busy={isBusy} className="space-y-5">
                 {error && (
-                    <div role="alert" aria-live="assertive" className="mb-6 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+                    <div role="alert" aria-live="assertive" className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
                         {error}
                     </div>
                 )}
 
                 {success && (
-                    <div role="status" aria-live="polite" className="mb-6 rounded-lg border border-green-500/30 bg-green-500/5 p-4 text-sm text-green-600 dark:text-green-400">
+                    <div role="status" aria-live="polite" className="rounded-lg border border-green-500/30 bg-green-500/5 p-3 text-sm text-green-600 dark:text-green-400">
                         {success}
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} aria-busy={isBusy} className="space-y-5 rounded-xl border border-border/60 bg-card p-6 shadow-sm sm:p-8">
-                    <FormField id="name" label="Full Name" required>
-                        <input id="name" name="name" type="text" value={formState.name} onChange={handleChange} placeholder="Enter your name" autoComplete="name" maxLength={100} required disabled={isBusy}
-                            className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60" />
-                    </FormField>
+                <FormField id="name" label="Full Name" required>
+                    <AuthInput id="name" name="name" type="text" value={formState.name} onChange={handleChange} placeholder="Enter your name" autoComplete="name" maxLength={60} required disabled={isBusy} />
+                </FormField>
 
-                    <FormField id="email" label="Email" required>
-                        <input id="email" name="email" type="email" value={formState.email} onChange={handleChange} placeholder="you@example.com" autoComplete="email" inputMode="email" autoCapitalize="none" spellCheck={false} required disabled={isBusy}
-                            className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60" />
-                    </FormField>
+                <FormField id="email" label="Email" required>
+                    <AuthInput id="email" name="email" type="email" value={formState.email} onChange={handleChange} placeholder="you@example.com" autoComplete="email" inputMode="email" autoCapitalize="none" spellCheck={false} required disabled={isBusy} />
+                </FormField>
 
-                    <FormField id="password" label="Password" required>
-                        <div className="relative">
-                            <input id="password" name="password" type={showPassword ? "text" : "password"} value={formState.password} onChange={handleChange} placeholder="Create a password" autoComplete="new-password" required disabled={isBusy}
-                                className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 pr-12 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60" />
+                <FormField id="password" label="Password" required>
+                    <PasswordInput id="password" name="password" value={formState.password} onChange={handleChange} placeholder="Create a password" autoComplete="new-password" disabled={isBusy} />
+                    <p className="text-xs text-muted-foreground">Use at least 8 characters.</p>
+                </FormField>
 
-                            <button type="button" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} disabled={isBusy}
-                                className="absolute inset-y-0 right-0 flex items-center justify-center rounded-r-md px-3 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60">
-                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                            </button>
-                        </div>
-                    </FormField>
-                    <p className="mt-1.5 text-xs text-muted-foreground">For Password use at least 8 characters.</p>
-
-                    <Button type="submit" className="w-full" disabled={isBusy}>
-                        {loading ? "Creating account..." : success ? "Account created" : "Create Account"}
-                    </Button>
-                </form>
-
-                <p className="mt-6 text-center text-sm text-muted-foreground">
-                    Already have an account?{" "}
-                    <Link to="/login" className="font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                        Sign in
-                    </Link>
-                </p>
-            </div>
-        </main>
+                <Button type="submit" className="h-11 w-full text-sm font-semibold" disabled={isBusy}>
+                    {loading ? "Creating account..." : success ? "Account created" : "Create Account"}
+                </Button>
+            </form>
+        </AuthLayout>
     )
 }
 
