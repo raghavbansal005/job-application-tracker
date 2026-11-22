@@ -10,6 +10,7 @@ const analyticsRoutes = require('./routes/analyticsRoutes')
 const dashboardRoutes = require('./routes/dashboardRoutes')
 const profileRoutes = require('./routes/profileRoutes')
 
+const connectDB = require('./config/db')
 const { apiLimiter } = require('./middleware/rateLimiters')
 
 const app = express()
@@ -18,12 +19,25 @@ if (process.env.NODE_ENV === 'production') {
 }
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173').split(',').map((origin) => origin.trim())
 
-app.use(cors({ origin: allowedOrigins }))
-app.use(express.json())
 app.use(helmet())
 app.use(cors({ origin: allowedOrigins }))
 app.use('/api', apiLimiter)
 app.use(express.json())
+
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ message: 'Application is running' })
+})
+
+app.use('/api', async (req, res, next) => {
+    try {
+        await connectDB()
+        next()
+    }
+    catch (error) {
+        console.error('Database connection failed:', error.message)
+        res.status(503).json({ message: 'Service temporarily unavailable. Please try again.' })
+    }
+})
 
 app.use('/api/auth', authRoutes)
 app.use('/api/applications', applicationRoutes)
@@ -32,10 +46,6 @@ app.use('/api/followups', followUpRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/profile', profileRoutes)
-
-app.get('/api/health', (req, res) => {
-    res.status(200).json({ message: 'Application is running' })
-})
 
 app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' })
