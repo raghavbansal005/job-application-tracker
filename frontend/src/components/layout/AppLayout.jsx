@@ -1,6 +1,6 @@
 import { Bell, BriefcaseBusiness, CalendarDays, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Menu, Settings, UserRound, X } from "lucide-react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -135,7 +135,9 @@ function AppLayout() {
                 </header>
 
                 <main className="min-h-[calc(100vh-4rem)]">
-                    <Outlet />
+                    <Suspense fallback={<p role="status" className="p-8 text-sm text-muted-foreground">Loading...</p>}>
+                        <Outlet />
+                    </Suspense>
                 </main>
             </div>
         </div>

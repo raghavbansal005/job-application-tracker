@@ -1,3 +1,4 @@
+import { lazy } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/auth/Login";
@@ -7,23 +8,21 @@ import ProtectedRoutes from "./pages/auth/ProtectedRoutes";
 import AppLayout from "./components/layout/AppLayout";
 
 import LandingPage from "./pages/public/LandingPage"
-import Dashboard from "./pages/app/Dashboard";
-import Settings from "./pages/app/Settings";
 
-import Applications from "./pages/app/Applications";
-import NewApplication from "./pages/app/NewApplication";
-import ApplicationDetails from "./pages/app/ApplicationDetails";
-import EditApplication from "./pages/app/EditApplication";
-
-import Interviews from "./pages/app/Interviews";
-import NewInterview from "./pages/app/NewInterview";
-import InterviewDetails from "./pages/app/InterviewDetails";
-import EditInterview from "./pages/app/EditInterview";
-
-import FollowUps from './pages/app/FollowUps'
-import NewFollowUp from './pages/app/NewFollowUp'
-import FollowUpDetails from './pages/app/FollowUpDetails'
-import EditFollowUp from './pages/app/EditFollowUp'
+const Dashboard = lazy(() => import("./pages/app/Dashboard"))
+const Settings = lazy(() => import("./pages/app/Settings"))
+const Applications = lazy(() => import("./pages/app/Applications"))
+const NewApplication = lazy(() => import("./pages/app/NewApplication"))
+const ApplicationDetails = lazy(() => import("./pages/app/ApplicationDetails"))
+const EditApplication = lazy(() => import("./pages/app/EditApplication"))
+const Interviews = lazy(() => import("./pages/app/Interviews"))
+const NewInterview = lazy(() => import("./pages/app/NewInterview"))
+const InterviewDetails = lazy(() => import("./pages/app/InterviewDetails"))
+const EditInterview = lazy(() => import("./pages/app/EditInterview"))
+const FollowUps = lazy(() => import("./pages/app/FollowUps"))
+const NewFollowUp = lazy(() => import("./pages/app/NewFollowUp"))
+const FollowUpDetails = lazy(() => import("./pages/app/FollowUpDetails"))
+const EditFollowUp = lazy(() => import("./pages/app/EditFollowUp"))
 
 function App() {
   return (
