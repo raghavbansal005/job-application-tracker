@@ -12,7 +12,7 @@ import { createApplication } from "@/services/applicationService"
 function NewApplication() {
     const navigate = useNavigate()
 
-    const [formData, setFormData] = useState({ company: "", jobTitle: "", jobUrl: "", location: "", employmentType: "Full-time", status: "Applied", appliedDate: "" })
+    const [formData, setFormData] = useState({ company: "", jobTitle: "", jobUrl: "", location: "", employmentType: "Full-time", status: "Applied", appliedDate: "", notes: "", jobDescription: "" })
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -112,6 +112,18 @@ function NewApplication() {
                                     className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20" />
                             </FormField>
                         </div>
+
+                        <FormField id="notes" label="Notes">
+                            <textarea id="notes" name="notes" rows={4} maxLength={2000} value={formData.notes} onChange={handleChange} placeholder="Recruiter name, salary range, referral, anything worth remembering..."
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
+                            <p className="text-xs text-muted-foreground">Optional. Up to 2,000 characters.</p>
+                        </FormField>
+
+                        <FormField id="jobDescription" label="Job Description">
+                            <textarea id="jobDescription" name="jobDescription" rows={8} maxLength={10000} value={formData.jobDescription} onChange={handleChange} placeholder="Paste the job description here to keep it with this application."
+                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
+                            <p className="text-xs text-muted-foreground">Optional. Up to 10,000 characters.</p>
+                        </FormField>
 
                         {error && (<div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3">
                             <p className="text-sm text-destructive">{error}</p>

@@ -13,7 +13,7 @@ function EditApplication() {
     const navigate = useNavigate()
     const { id } = useParams()
 
-    const [formData, setFormData] = useState({ company: '', jobTitle: '', jobUrl: '', location: '', employmentType: 'Full-time', status: 'Applied', appliedDate: '' })
+    const [formData, setFormData] = useState({ company: '', jobTitle: '', jobUrl: '', location: '', employmentType: 'Full-time', status: 'Applied', appliedDate: '', notes: '', jobDescription: '' })
 
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
@@ -33,7 +33,8 @@ function EditApplication() {
                     company: application.company || '', jobTitle: application.jobTitle || '',
                     jobUrl: application.jobUrl || '', location: application.location || '',
                     employmentType: application.employmentType || 'Full-time', status: application.status || 'Applied',
-                    appliedDate: application.appliedDate ? application.appliedDate.slice(0, 10) : ''
+                    appliedDate: application.appliedDate ? application.appliedDate.slice(0, 10) : '',
+                    notes: application.notes || '', jobDescription: application.jobDescription || ''
                 })
             }
             catch (error) {
@@ -154,6 +155,22 @@ function EditApplication() {
                             <input id="appliedDate" name="appliedDate" type="date" value={formData.appliedDate} onChange={handleChange}
                                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
                         </FormField>
+
+                        <div className="sm:col-span-2">
+                            <FormField id="notes" label="Notes">
+                                <textarea id="notes" name="notes" rows={4} maxLength={2000} value={formData.notes} onChange={handleChange} placeholder="Recruiter name, salary range, referral, anything worth remembering..."
+                                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                <p className="text-xs text-muted-foreground">Optional. Up to 2,000 characters.</p>
+                            </FormField>
+                        </div>
+
+                        <div className="sm:col-span-2">
+                            <FormField id="jobDescription" label="Job Description">
+                                <textarea id="jobDescription" name="jobDescription" rows={8} maxLength={10000} value={formData.jobDescription} onChange={handleChange} placeholder="Paste the job description here to keep it with this application."
+                                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                                <p className="text-xs text-muted-foreground">Optional. Up to 10,000 characters.</p>
+                            </FormField>
+                        </div>
                     </div>
 
                     {error && (<p className="mt-6 text-sm text-destructive">{error}</p>)}

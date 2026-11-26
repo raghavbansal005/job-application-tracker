@@ -8,7 +8,9 @@ const applicationSchema = new mongoose.Schema({
     location: { type: String, trim: true },
     employmentType: { type: String, enum: ['Full-time', 'Part-time', 'Contract', 'Internship', 'Freelance'], default: 'Full-time' },
     status: { type: String, enum: ['Wishlist', 'Applied', 'Screening', 'Interview', 'Offer', 'Rejected', 'Withdrawn'], default: 'Wishlist' },
-    appliedDate: { type: Date }
+    appliedDate: { type: Date },
+    notes: { type: String, trim: true, maxlength: 1000 },
+    jobDescription: { type: String, trim: true, maxlength: 5000 }
 },
     {
         timestamps: true

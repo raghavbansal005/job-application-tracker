@@ -2,18 +2,21 @@ const Application = require('../models/Application')
 const errorDetail = require('../utils/errorDetail')
 
 const createApplication = async (req, res) => {
-    const { company, jobTitle, jobUrl, location, employmentType, status, appliedDate } = req.body
+    const { company, jobTitle, jobUrl, location, employmentType, status, appliedDate, notes, jobDescription } = req.body
 
     if (!company || !jobTitle) {
         return res.status(400).json({ message: 'Please provide the company and jobTitle.' })
     }
 
     try {
-        const newApplication = new Application({ user: req.user, company, jobTitle, jobUrl, location, employmentType, status, appliedDate })
+        const newApplication = new Application({ user: req.user, company, jobTitle, jobUrl, location, employmentType, status, appliedDate, notes, jobDescription })
         await newApplication.save()
         return res.status(201).json({ message: 'Application created successfully.', application: newApplication })
     }
     catch (error) {
+        if (error.name === 'ValidationError' || error.name === 'CastError') {
+            return res.status(400).json({ message: 'Please check the application details and try again.' })
+        }
         return res.status(500).json({ message: 'Failed to create application.', error: errorDetail(error) })
     }
 }
@@ -45,7 +48,7 @@ const getApplicationById = async (req, res) => {
 
 const updateApplication = async (req, res) => {
     const { id } = req.params
-    const allowedFields = ['company', 'jobTitle', 'jobUrl', 'location', 'employmentType', 'status', 'appliedDate']
+    const allowedFields = ['company', 'jobTitle', 'jobUrl', 'location', 'employmentType', 'status', 'appliedDate', 'notes', 'jobDescription']
     const updateData = {}
 
     for (const field of allowedFields) {

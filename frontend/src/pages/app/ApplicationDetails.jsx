@@ -159,6 +159,23 @@ function ApplicationDetails() {
                         </div>
                     )}
                 </div>
+
+                {application.notes && (
+                    <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
+                        <h2 className="text-lg font-semibold text-foreground">Notes</h2>
+                        <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-6 text-foreground">{application.notes}</p>
+                    </div>
+                )}
+
+                {application.jobDescription && (
+                    <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
+                        <h2 className="text-lg font-semibold text-foreground">Job Description</h2>
+                        <div className="mt-4 max-h-96 overflow-y-auto rounded-lg border border-border/60 bg-muted/30 p-4">
+                            <p className="whitespace-pre-wrap break-words text-sm leading-6 text-foreground">{application.jobDescription}</p>
+                        </div>
+                    </div>
+                )}
+
                 {deleteError && (
                     <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
                         <p className="text-sm text-destructive">{deleteError}</p>
