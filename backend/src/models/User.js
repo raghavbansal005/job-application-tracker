@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
     preferences: {
         theme: { type: String, enum: ['light', 'dark', 'system'] },
         defaultApplicationView: { type: String, enum: ['list', 'board'], default: 'list' },
+        aiEnabled: { type: Boolean, default: false },
+        aiConsentAt: { type: Date }
     }
 }, {
     timestamps: true

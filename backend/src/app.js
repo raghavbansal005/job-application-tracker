@@ -9,6 +9,7 @@ const followUpRoutes = require('./routes/followUpRoutes')
 const analyticsRoutes = require('./routes/analyticsRoutes')
 const dashboardRoutes = require('./routes/dashboardRoutes')
 const profileRoutes = require('./routes/profileRoutes')
+const aiRoutes = require('./routes/aiRoutes')
 
 const connectDB = require('./config/db')
 const { apiLimiter } = require('./middleware/rateLimiters')
@@ -46,6 +47,7 @@ app.use('/api/followups', followUpRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/profile', profileRoutes)
+app.use('/api/ai', aiRoutes)
 
 app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' })
