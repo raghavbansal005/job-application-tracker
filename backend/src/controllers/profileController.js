@@ -45,6 +45,14 @@ const updateProfile = async (req, res) => {
             }
             updates['preferences.defaultApplicationView'] = preferences.defaultApplicationView
         }
+
+        if (preferences.aiEnabled !== undefined) {
+            if (typeof preferences.aiEnabled !== 'boolean') {
+                return res.status(400).json({ message: 'Invalid AI setting.' })
+            }
+            updates['preferences.aiEnabled'] = preferences.aiEnabled
+            updates['preferences.aiConsentAt'] = preferences.aiEnabled ? new Date() : null
+        }
     }
 
     if (Object.keys(updates).length === 0) {
